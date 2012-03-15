@@ -1,0 +1,57 @@
+body{
+		font-family:"Trebuchet MS","Arial","Helvetica","Verdana","sans-serif";
+}
+.container  {
+	background-color:#fefefe;
+	border: 1px solid #eee;
+	height:200px;
+	padding:12px;
+	width:500px;
+	margin: 50px auto;
+}
+.draggable {
+	width: 20px;
+	height: 20px;
+	padding: 5px;
+	float: left;
+	margin: 10px 10px 10px 0; 
+	background-color: #fcc;
+	border:1px dotted #b36;
+	font-weight: bold;
+	text-align: center;
+	cursor:move;
+}
+.draggable span,
+.draggable small{
+	display:none;
+}
+.excerpt{
+	font-size: 10px;
+	background: #fff;
+	border: 1px solid #ccc;
+	width: 70px;
+	height: 50px;
+	padding: 10px;
+}
+.droppable {
+	width: 200px;
+	height: 150px;
+	padding: 5px;
+	float: right;
+	margin: 10px;
+	background-color: #ffd;
+	border:1px dashed #999;
+}
+.dragactive{
+	background-color: #ffcccc;
+	border: 1px dashed #e5a8a8;
+}
+.drophover{
+	background-color: #d5eca6;
+	border: 1px dotted #c7dd9b;
+}
+.drophighlight{
+	background-color: #cae9ec;
+	border: 1px solid #b9d5d8;
+}
+.description{font-size:12px;text-align:center;}
