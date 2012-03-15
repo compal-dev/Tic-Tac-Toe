@@ -1,0 +1,217 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1024, height=768" />
+    <title>TicTacToe</title>
+    <!-- WinJS references -->
+    <link rel="stylesheet" href="/winjs/css/ui-dark.css" />
+    <script src="/winjs/js/base.js"></script>
+    <script src="/winjs/js/wwaapp.js"></script>
+    <script src="/winjs/js/ui.js"></script>
+    <script src="/winjs/js/controls.js"></script>
+
+    <!-- TicTacToe references -->
+    <link rel="stylesheet" href="/css/default.css" />
+    <script src="/js/libs/jquery-1.6.2.js"></script>
+    <script src="/js/libs/jquery-ui-1.8.16.custom.min.js"></script>
+    <script src="/js/default.js"></script>
+    <script>
+        /// 設定順序初始，O 是圈圈，X 是叉叉
+        var turn = null;
+
+        /// 設定圈圈叉叉順序，每次只能移動一次
+        function playRound() {
+            if (turn == "O") {
+                $("#circle").draggable("option", "disabled", true);
+                $("#circle").addClass("black-div");
+                $("#cross").draggable("option", "disabled", false);
+                $("#cross").removeClass("black-div");
+                turn = "X";
+            } else {
+                $("#circle").draggable("option", "disabled", false);
+                $("#circle").removeClass("black-div");
+                $("#cross").draggable("option", "disabled", true);
+                $("#cross").addClass("black-div");
+                turn = "O";
+            }
+        }
+
+        /// 清空版面，並且初始化設定
+        function resetGame() {
+            for (i = 0; i <= 2; i++) {
+                $("#block0" + i).children("img").remove();
+                $("#block1" + i).children("img").remove();
+                $("#block2" + i).children("img").remove();
+            }
+            $(".slidemeup").slideUp();
+            $("#outputText").html("");
+            turn = "X";
+            playRound();
+        }
+
+        /// 平手檢查: 檢查是否已沒有空位
+        function checkGameIfFinish() {
+            for (i = 0; i <= 2; i++) {
+                for (j = 0; j <= 2; j++) {
+                    if ($("#block" + i + j).children("img").attr("src") == null) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        /// 位置內容比對: 進行三個位置的比對，如果為一條線(三個位置內的圖案一樣)，則回傳 true
+        function compare(obj01, obj02, obj03) {
+            if ($("#" + obj01).children("img").attr("src") != null && $("#" + obj02).children("img").attr("src") != null && $("#" + obj03).children("img").attr("src") != null) {
+                if ($("#" + obj01).children("img").attr("src") == $("#" + obj02).children("img").attr("src") && $("#" + obj02).children("img").attr("src") == $("#" + obj03).children("img").attr("src")) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                return false;
+            }
+        }
+
+        /// 勝負檢查: 進行把所有板上的位置傳回 compare 做檢查
+        function checkRow() {
+            for (i = 0; i <= 2; i++) {
+                // 比對列
+                if (eval("compare('block" + i + "0','block" + i + "1','block" + i + "2')")) {
+                    return true;
+                }
+                // 比對欄
+                if (eval("compare('block0" + i + "','block1" + i + "','block2" + i + "')")) {
+                    return true;
+                }
+                // 比對對角線
+                if (eval("compare('block0" + i + "','block11','block2" + (2 - i) + "')")) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// 設定棋子初始化及移動樣式
+        function imgMoveInit(ui) {
+            if (ui == null) {
+                /// 設定圓圈的樣式
+                $("#circle").draggable({
+                    revert: true
+                });
+                /// 設定叉叉的樣式
+                $("#cross").draggable({
+                    revert: true
+                });
+            }
+            else if (ui.draggable.attr("id") == "circle") {
+                $("#circlePanel").append('<img id="circle" alt="Player1 Chessman" src="' + ui.draggable.attr("src") + '" />');
+                /// 設定圓圈的樣式
+                $("#circle").draggable({
+                    revert: true
+                });
+            } else if (ui.draggable.attr("id") == "cross") {
+                $("#crossPanel").append('<img id="cross" alt="Player2 Chessman" src="' + ui.draggable.attr("src") + '" />');
+                /// 設定叉叉的樣式
+                $("#cross").draggable({
+                    revert: true
+                });
+            }
+        }
+
+        function init() {
+            
+            $("#reset").bind("click", resetGame);
+
+            imgMoveInit();
+            turn = "X";
+            playRound();
+
+            /// 套用至所有 CSS .droppable 的 Object
+            /// 設定圖片放置位置且不可重複放置
+            /// 執行順序交替
+            /// 執行勝負檢查
+            /// 執行平手檢查
+            $(".droppable").droppable({
+                activeClass: 'dragactived',
+                hoverClass: 'drophoverd',
+                drop: function (event, ui) {
+                    if ($(this).children("img").attr("src") == null) {
+                        $(this).html('<img src="' + ui.draggable.attr("src") + '" />');
+                        $("#" + ui.draggable.attr("id")).remove();
+                        imgMoveInit(ui);
+                        playRound();
+                        if (checkRow()) {
+                            if (turn == "X") {
+                                $("#outputText").html("Circle Player Win !");
+                            }else {
+                                $("#outputText").html("Cross Player Win !");
+                            }
+                            $(".slidemeup").slideDown();
+                            $("#circle").draggable("option", "disabled", true);
+                            $("#cross").draggable("option", "disabled", true);
+
+                        } else if (checkGameIfFinish()) {
+                            $("#outputText").html("The Game Is Draw !");
+                            $(".slidemeup").slideDown();
+                            $("#circle").draggable("option", "disabled", true);
+                            $("#cross").draggable("option", "disabled", true);
+                        }
+
+                    }
+                }
+            });
+        }
+
+        window.onload = init;
+        
+    </script>
+
+</head>
+<body>
+    <div data-win-control="WinJS.UI.ViewBox">
+        <div class="fixed-layout">
+            <p>HTML5 Tic-Tac-Toe</p>
+            <div id="container" class="container">
+            <div id="circlePanel" class="imgContainer"><img id="circle" alt="Chessman" src="/images/Circle.png" draggable="true"/></div>
+            <div id="crossPanel" ><img id="cross" alt="Player2 Chessman" src="/images/Cross.png" draggable="true" /></div>
+                <br /><br />
+            <div id="block00" class="droppable">
+                
+            </div>
+            <div id="block01" class="droppable">
+               
+            </div>
+            <div id="block02" class="droppable">
+                
+            </div>
+            <div id="block10" class="droppable">
+               
+            </div>
+            <div id="block11" class="droppable">
+                
+            </div>
+            <div id="block12" class="droppable">
+                
+            </div>    
+            <div id="block20" class="droppable">
+                
+            </div>
+            <div id="block21" class="droppable">
+                
+            </div>
+            <div id="block22" class="droppable">
+                
+            </div>    
+                
+                 
+        </div>
+            <div id="slideUp" class="slidemeup"><p></p><div id="outputText"></div><p><input type="button" id="reset" value="Reset" /></p></div>
+    </div>
+    </div>
+</body>
+</html>
