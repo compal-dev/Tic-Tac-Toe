@@ -5,10 +5,7 @@
 }
 
 body {
-    display: -ms-box;
-    -ms-box-orient: vertical;
-    -ms-box-pack: center;
-    -ms-box-align: middle;
+
 }
 
 .fixed-layout {
@@ -27,7 +24,7 @@ img {
 	height:640px;
 	padding:12px;
 	width:450px;
-	margin: 50px auto;
+
     position: relative;
     /*display: block;*/
     overflow: hidden;
