@@ -16,6 +16,11 @@ body {
     height: 768px;
 }
 
+img {
+    position:static;
+    z-index:2;
+}
+
 .container  {
 	background-color:#716666;
 	border: 5px solid #514d4d;
@@ -29,11 +34,10 @@ body {
 }
 
 .black-div{
-background:black;
-    width:125px;
-    height:125px;
-    opacity:0.3;
-    background-color:#716666;
+    opacity: .5;
+    filter: Alpha(Opacity=50);
+    position:absolute;
+    z-index:0;
 }
 
 .imgContainer{
@@ -90,30 +94,10 @@ background:black;
 	border: 1px dashed #e5a8a8;
 }
 .drophover{
-	background-color: #d5eca6;
-	border: 1px dotted #c7dd9b;
+	background-color:#284b6d;
+    border:2px solid #cccccc;
 }
 .drophighlight{
-	background-color: #cae9ec;
+	background-color: #CCCCCC;
 	border: 1px solid #b9d5d8;
-}
-
-@media screen and (-ms-view-state: full-screen)
-{
- 
-}
-
-@media screen and (-ms-view-state: fill)
-{
-
-}
-
-@media screen and (-ms-view-state: snapped)
-{
-
-}
-		
-@media screen and (-ms-view-state: device-portrait)
-{
-
 }
